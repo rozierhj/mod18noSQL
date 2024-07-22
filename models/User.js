@@ -1,15 +1,32 @@
 const {Schema, model} = require('mongoose');
 
 const userSchema = new Schema({
-    first: String,
-    last: String,
-    age: Number,
+    username: {type: String, 
+        required: true, 
+        unique: true,
+    },
+    email: {type: String, 
+        required: true, 
+        unique: true},
+    thoughts:[
+        {
+        type: Schema.Types.ObjectId,
+        ref: 'thought',
+        },
+    ],
+    friends:[
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'user',
+        },
+    ],
 });
 
 const User = model('user', userSchema);
 
-User.create({first: 'Hunter', last:'Rozier', age:54})
-.then(data => console.log(data))
-.catch(err => console.error(err));
+User.create({
+username:'chickens',
+email: 'chicken@email.com',
+});
 
 module.exports = User;

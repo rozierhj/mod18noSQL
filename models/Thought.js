@@ -7,8 +7,9 @@ const thoughtSchema = new Schema({
 
 const Thought = model('thought', thoughtSchema);
 
-Thought.create({text:'first text', username:'frodo'})
-.then(data => console.log(data))
-.catch(err => console.error(err));
+Thought.create({
+    text:'my first thought',
+    username:'todo',
+})
 
 module.exports = Thought;
