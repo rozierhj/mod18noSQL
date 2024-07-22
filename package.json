@@ -1,0 +1,17 @@
+{
+  "name": "mod18noSQL",
+  "version": "1.0.1",
+  "description": "module 18 challenge",
+  "main": "server.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon server",
+    "seed": "node utils/seed"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.5.1",
+    "nodemon": "^3.1.4"
+  }
+}
