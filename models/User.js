@@ -41,9 +41,4 @@ userSchema
 
 const User = model('user', userSchema);
 
-User.create({
-username:'chickens',
-email: 'chicken@email.com',
-});
-
 module.exports = User;
