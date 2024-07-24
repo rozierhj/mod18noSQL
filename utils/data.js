@@ -16,4 +16,18 @@ const emails = [
 
 ];
 
-module.exports = {usernames, emails}
+const reactionData = [
+    'this is user 1 reaction',
+    'this is user 2 reaction',
+    'this is user 3 reaction',
+    'this is user 4 reaction',
+];
+
+const thoughtData = [
+    'user 1 thought',
+    'user 2 thought',
+    'user 3 thought',
+    'user 4 thought',
+];
+
+module.exports = {usernames, emails, reactionData, thoughtData};
