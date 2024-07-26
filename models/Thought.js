@@ -7,7 +7,6 @@ const reactionSchema = new Schema({
     reactionBody: {type: String, required: true, maxlength:280},
     username:{type: String, required: true},
     createdAt:{type:Date, default: Date.now },
-
 },
 {
     toJSON:{
@@ -16,6 +15,10 @@ const reactionSchema = new Schema({
     id:false,
 }
 );
+
+reactionSchema.virtual('reactionCreatedAt').get(function(){
+    return this.createdAt.toLocaleString();
+});
 
 const thoughtSchema = new Schema({
     thoughtText: {type:String, required: true, minlength: 1, maxlength: 280},
@@ -26,7 +29,11 @@ const thoughtSchema = new Schema({
 
 thoughtSchema.virtual('reactionCount').get(function(){
     return this.reactions.length;
-})
+});
+
+thoughtSchema.virtual('thoughtCreatdAt').get(function(){
+    return this.createdAt.toLocaleString();
+});
 
 const Thought = model('thought', thoughtSchema);
 
