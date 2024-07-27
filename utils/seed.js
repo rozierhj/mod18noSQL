@@ -30,6 +30,7 @@ connection.once('open', async()=>{
     
     await User.insertMany(users);
 
+    //loop through users to add friends
     for(let usr = 0; usr < 40; usr++){
 
     //user we are adding frineds to
@@ -58,36 +59,49 @@ connection.once('open', async()=>{
 
     }
 
-    //user to add friends to
+    
+    //make 50 thoughts
+    for(let i = 0; i<50; i++){
 
-//     oneUser.friends.addToSet()
+        //get user for thought
+        const thoughtUser = await User.findOne().skip(setRandomNum(0,39)).exec();
+        //id of the random user
+        
+        //create reactions
+        const reactions = []
+        for(let rct =0; rct < setRandomNum(1,4); rct++){
 
-//     const numFrnd = setRandomNum(1,4);
-//     for (let frnd = 0; frnd < numFrnd; frnd++){
+            //get random user to add to reaction
+            const reactionUser = await User.findOne().skip(setRandomNum(0,39)).exec();
+            //create reaction values
+            reactions.push({
+                reactionBody:`reaction #${rct} from user#${reactionUser.username}`,
+                username: `${reactionUser.username}`,
+            })
 
-       
+        }
 
-//     }
+        const userID = thoughtUser._id;
 
+        //populate thought fields
+        const thoughts = {
+            thoughtText: `thought #${i} for our user ${thoughtUser.username}`,
+            username: thoughtUser.username,
+            reactions: reactions,
+        };
+        
+        //create th thought
+        const newthought = new Thought(thoughts);
+        console.log(newthought._id, 'thought');
 
-// //go through all users
-//     for(let i = 0; i < 40; i++){
+        //add the thoughts id to the users thought collection
+        thoughtUser.thoughts.addToSet(newthought._id);
 
-//         const oneUser = await User.findOne().skip(i).exec();
-//         const numThought = setRandomNum(1,4);
+        //save edits to the thought and user docs
+        await newthought.save();
+        await thoughtUser.save();
 
-// //create random number of thoughts
-//         for(let tht = 0; tht < numThought; tht++){
-
-// //create random number of reactions to a thought
-//         numReaction = setRandomNum(1,4);
-//         for(let k =0; k < 1; k++){
-
-
-
-//             }
-//         }
-//     }
+    }
 
 
     console.log(users);
