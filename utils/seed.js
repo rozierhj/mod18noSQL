@@ -75,7 +75,7 @@ connection.once('open', async()=>{
             const reactionUser = await User.findOne().skip(setRandomNum(0,39)).exec();
             //create reaction values
             reactions.push({
-                reactionBody:`reaction #${rct} from user#${reactionUser.username}`,
+                reactionBody:`to reaction #${rct} from user#${reactionUser.username}`,
                 username: `${reactionUser.username}`,
             })
 
@@ -85,7 +85,7 @@ connection.once('open', async()=>{
 
         //populate thought fields
         const thoughts = {
-            thoughtText: `thought #${i} for our user ${thoughtUser.username}`,
+            thoughtText: `to thought #${i} for our user ${thoughtUser.username}`,
             username: thoughtUser.username,
             reactions: reactions,
         };
