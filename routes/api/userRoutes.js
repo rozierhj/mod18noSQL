@@ -11,7 +11,7 @@ const {
 } = require('../../controllers/userControllers');
 
 // /api/users
-router.route('/').get(getAllUsers);
+router.route('/').get(getAllUsers).post(addUser);
 
 // /api/users/userID
 router.route('/:userID').get(getOneUser);

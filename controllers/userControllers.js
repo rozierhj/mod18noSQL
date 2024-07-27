@@ -35,6 +35,9 @@ catch(err){
 async addUser(req, res){
     try{
 
+        const dbNewUser = await User.create(req.body);
+        res.json(dbNewUser);
+
     }
     catch(err){
         res.status(500).json(err);

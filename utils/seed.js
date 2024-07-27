@@ -17,34 +17,7 @@ connection.once('open', async()=>{
     }
 
     const users = [];
-    let thought = [];
-    let reactions = [];
 
-    reactions = [
-        {reactionBody:reactionData[0],
-        username:usernames[0],
-        },
-        {
-        reactionBody:reactionData[1],
-        username:usernames[1],
-        }
-    ];
-    thought = [
-        {
-            thoughtText:thoughtData[0],
-            username:usernames[0],
-            reactions:reactions,
-        },
-        {
-            thoughtText:thoughtData[1],
-            username:usernames[1],
-            reactions:reactions,
-        }
-    ]
-
-    await Thought.insertMany(thought);
-    console.log(thought)
-    
     for(let i = 0; i < usernames.length; i++){
         const username = usernames[i];
         const email = emails[i];
@@ -56,7 +29,76 @@ connection.once('open', async()=>{
     }
     
     await User.insertMany(users);
+
+    for(let usr = 0; usr < 40; usr++){
+
+    //user we are adding frineds to
+    const oneUser = await User.findOne().skip(usr).exec();
+
+    //number of friends to add to user
+    const numFriends = setRandomNum(1, 4);
+
+    for(let fnd = 0; fnd <= numFriends; fnd++){
+
+        //get a new friend
+        const randomFriend = setRandomNum(0,39);
+        const newFriend = await User.findOne().skip(randomFriend).exec();
+
+        //get the ID from the friend
+        const newFriendID = newFriend._id;
+        console.log(newFriendID);
+
+        //add the ID to the users friend count
+        oneUser.friends.addToSet(newFriendID);
+
+        const updatedUSer = await oneUser.save();
+
+    }
+
+
+    }
+
+    //user to add friends to
+
+//     oneUser.friends.addToSet()
+
+//     const numFrnd = setRandomNum(1,4);
+//     for (let frnd = 0; frnd < numFrnd; frnd++){
+
+       
+
+//     }
+
+
+// //go through all users
+//     for(let i = 0; i < 40; i++){
+
+//         const oneUser = await User.findOne().skip(i).exec();
+//         const numThought = setRandomNum(1,4);
+
+// //create random number of thoughts
+//         for(let tht = 0; tht < numThought; tht++){
+
+// //create random number of reactions to a thought
+//         numReaction = setRandomNum(1,4);
+//         for(let k =0; k < 1; k++){
+
+
+
+//             }
+//         }
+//     }
+
+
     console.log(users);
     process.exit(0);
 
 });
+
+function setRandomNum(min, max){
+
+    return Math.floor(Math.random()*(max - min + 1)) + min;
+
+}
+
+  
