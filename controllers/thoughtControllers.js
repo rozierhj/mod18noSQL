@@ -19,7 +19,7 @@ async getAllThoughts(req, res){
 
 async getOneThought(req, res){
     try{
-        const thought = await Thought.findOne({_id: req.params.thoughtID}).select('-__v');
+        const thought = await Thought.findById(req.params.thoughtID).select('-__v');
         res.json(thought);
     }
     catch(err){

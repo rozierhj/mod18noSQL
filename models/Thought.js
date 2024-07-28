@@ -18,6 +18,19 @@ const reactionSchema = new Schema({
     toJSON:{
         virtuals: true,
         getters: true,
+        transform:(doc, ret, options) =>{
+            const id = ret._id;
+            delete ret._id;
+            ret._id = id;
+            // ret.reactionCount = doc.reactionCount;
+            return {
+                reactionID: ret.reactionID,
+                createdAt: ret.createdAt,
+                _id: id,
+                reactionBody : ret.reactionBody,
+                username: ret.username,
+            }
+        }
     },
     toObject:{
         virtuals: true,

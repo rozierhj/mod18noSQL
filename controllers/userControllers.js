@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Thought = require('../models/Thought');
 //get all users
 //get a single user
 //post user
@@ -23,7 +24,13 @@ async getAllUsers(req, res){
 async getOneUser(req, res){
 
 try{
-    const user = await User.findOne({_id: req.params.userID}).select('-__v');
+    const user = await User.findById(req.params.userID)
+    .select('-__v')
+    .populate('thoughts')
+    .populate('friends')
+    .exec();
+
+
         res.json(user);
 }
 catch(err){
@@ -46,7 +53,13 @@ async addUser(req, res){
 
 async editUser(req, res){
     try{
+        const updateUser = await User.findByIdAndUpdate(req.params.userID, req.body,{
+            new: true,
+            runValidators: true,
+            useFindAndModify: false
+        }).populate('thoughts friends');
 
+        res.json(updateUser);
     }
     catch(err){
         res.status(500).json(err);
@@ -55,6 +68,21 @@ async editUser(req, res){
 
 async deleteUser(req, res){
     try{
+
+        const deletedUser = await User.findByIdAndDelete(req.params.userID);
+
+        if(!deletedUser){
+            return res.status(404).send('user not found');
+        }
+
+       const deletedThoughts =  await Thought.deleteMany({username: deletedUser.username});
+
+       await Thought.updateMany(
+        {"reactions.username":deletedUser.username},
+        {$pull:{reactions:{username:deletedUser.username}}}
+       )
+
+        res.json({message: 'user deleted'});
 
     }
     catch(err){
