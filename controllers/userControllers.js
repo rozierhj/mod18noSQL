@@ -30,6 +30,9 @@ try{
     .populate('friends')
     .exec();
 
+    if(!user){
+        return res.status(404).send('User not found');
+}
 
         res.json(user);
 }
@@ -92,6 +95,20 @@ async deleteUser(req, res){
 
 async addUserFriend(req, res){
     try{
+        const user = await User.findById(req.params.userID);
+
+        if(!user){
+                return res.status(404).send('User not found');
+        }
+
+        if(!user.friends.includes(req.params.friendID)){
+            user.friends.push(req.params.friendID);
+            await user.save();
+            return res.json({message: "friend added"});
+        }
+        else{
+            return res.status(400).send("friend is already in list");
+        }
 
     }
     catch(err){
@@ -101,6 +118,18 @@ async addUserFriend(req, res){
 
 async deleteUserFriend(req, res){
     try{
+
+        const user = await User.findById(req.params.userID);
+
+        if(!user){
+            return res.status(404).send('User not found');
+        }
+
+        user.friends.pull(req.params.friendID);
+
+        await user.save();
+
+        res.json({message:'friend removed'});
 
     }
     catch(err){

@@ -1,4 +1,6 @@
 const Thought = require('../models/Thought');
+const User = require('../models/User');
+const {format} = require('date-fns');
 //return all thoughts
 //return single thought
 //post thought
@@ -29,7 +31,8 @@ async getOneThought(req, res){
 
 async addThought(req, res){
     try{
-
+        const dbNewThought = await Thought.create(req.body);
+        res.json(dbNewThought);
     }
     catch(err){
         res.status(500).json(err);
@@ -38,7 +41,13 @@ async addThought(req, res){
 
 async editThought(req, res){
     try{
+        const updateThought = await Thought.findByIdAndUpdate(req.params.thoughtID, req.body,{
+            new: true,
+            runValidators: true,
+            useFindAndModify: false
+        });
 
+        res.json(updateThought);
     }
     catch(err){
         res.status(500).json(err);
@@ -48,10 +57,49 @@ async editThought(req, res){
 async deleteThought(req, res){
     try{
 
+        const deletedThought = await Thought.findByIdAndDelete(req.params.thoughtID);
+
+        if(!deletedThought){
+            res.status(404).send('deleted thought');
+        }
+
+        const user = await User.findOne({thoughts: req.params.thoughtID});
+
+        if (user){
+            user.thoughts.pull(req.params.thoughtID);
+            await user.save();
+        }
+
+        res.json({message:"deleted thought"});
+
     }
     catch(err){
         res.status(500).json(err);
     }
+},
+
+async addReaction(req, res){
+
+    try{
+
+        const thought = await Thought.findById(req.params.thoughtID);
+
+        if(!thought){
+            return res.status(404).send('Thought not found');
+        }
+
+        thought.reactions.push(req.body);
+
+        await thought.save();
+
+        res.json({message:'reaction saved'});
+
+    }
+    catch(err){
+        console.error(err);
+        res.status(500).json(err);
+    }
+
 }
 
 
