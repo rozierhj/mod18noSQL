@@ -70,7 +70,7 @@ async deleteThought(req, res){
             await user.save();
         }
 
-        res.json({message:"deleted thought"});
+        res.json(deletedThought);
 
     }
     catch(err){
@@ -92,11 +92,33 @@ async addReaction(req, res){
 
         await thought.save();
 
-        res.json({message:'reaction saved'});
+        res.json(thought);
 
     }
     catch(err){
         console.error(err);
+        res.status(500).json(err);
+    }
+
+},
+
+async deleteReaction(req, res){
+
+    try{
+
+        const thought = await Thought.findByIdAndUpdate(
+            req.params.thoughtID,
+            {$pull:{reactions:{reactionID : req.params.reactionID}}},
+        );
+
+        if(!thought){
+            return res.status(404).send('Thought no found');
+        }
+
+        res.json(thought);
+
+    }
+    catch(err){
         res.status(500).json(err);
     }
 

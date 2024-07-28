@@ -85,7 +85,7 @@ async deleteUser(req, res){
         {$pull:{reactions:{username:deletedUser.username}}}
        )
 
-        res.json({message: 'user deleted'});
+        res.json(deletedUser);
 
     }
     catch(err){
@@ -104,7 +104,7 @@ async addUserFriend(req, res){
         if(!user.friends.includes(req.params.friendID)){
             user.friends.push(req.params.friendID);
             await user.save();
-            return res.json({message: "friend added"});
+            return res.json(user);
         }
         else{
             return res.status(400).send("friend is already in list");
@@ -129,7 +129,7 @@ async deleteUserFriend(req, res){
 
         await user.save();
 
-        res.json({message:'friend removed'});
+        res.json(user);
 
     }
     catch(err){
